@@ -8,19 +8,17 @@ import (
 
 func main() {
 	s := "01,WPACAU2DK,BHOL,190321,1631,01,080,,2/"
-	f, err := parser.NewFileHeader(parser.FH, s)
+	section, err := parser.NewSection(s)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println(section.Type)
 
-	i, err := f.GetFieldIndex(parser.SenderID)
+	idx, err := section.GetFieldIndex(parser.RecordCode)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(i)
-
-	fmt.Println(f.GetFieldValueByType(parser.SenderID))
-	fmt.Println(f.GetFieldValueByIndex(4))
+	fmt.Println(idx)
 }
