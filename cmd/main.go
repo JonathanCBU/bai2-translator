@@ -2,23 +2,26 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/JonathanCBU/bai2-translator/internal/parser"
 )
 
 func main() {
-	s := "01,WPACAU2DK,BHOL,190321,1631,01,080,,2/"
-	section, err := parser.NewSection(s)
+	file := "./tmp/bai2-npp-sample-file.txt"
+	f, err := os.Open(file)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(section.Type)
+	defer f.Close()
 
-	idx, err := section.GetFieldIndex(parser.RecordCode)
+	sections, err := parser.ScanFileToSections(f)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(idx)
+	for i := range sections {
+		fmt.Println(sections[i].Type)
+	}
 }

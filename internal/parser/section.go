@@ -55,13 +55,11 @@ func NewSection(r string) (*Section, error) {
 	trimmed := strings.TrimRight(r, "/")
 	f := strings.Split(trimmed, ",")
 
-	fmt.Println("Getting section ID")
 	t, err := GetSectionIdentifier(r)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("Getting section mandatory")
 	m, err := IsSectionMandatory(t)
 	if err != nil {
 		return nil, err
@@ -94,11 +92,17 @@ func (s *Section) GetFieldValueByType(t FieldType) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if idx >= len(s.Fields) {
+		return "", fmt.Errorf(FieldIndexOutOfRange)
+	}
 	return s.Fields[idx], nil
 }
 
 func (s *Section) GetFieldValueByIndex(i int) (string, error) {
-	return "", nil
+	if i >= len(s.Fields) {
+		return "", fmt.Errorf(FieldIndexOutOfRange)
+	}
+	return s.Fields[i], nil
 }
 
 /*
