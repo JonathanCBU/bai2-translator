@@ -42,6 +42,7 @@ var mandatoryMap = map[SectionIdentifier]bool{
 	FT: true,
 }
 
+// Section represents one row of a BAI2 file
 type Section struct {
 	Raw       string
 	Type      SectionIdentifier
@@ -50,7 +51,6 @@ type Section struct {
 	NumFields int
 }
 
-// NewSection accepts a raw string and
 func NewSection(r string) (*Section, error) {
 	trimmed := strings.TrimRight(r, "/")
 	f := strings.Split(trimmed, ",")
@@ -105,9 +105,14 @@ func (s *Section) GetFieldValueByIndex(i int) (string, error) {
 	return s.Fields[i], nil
 }
 
-/*
-Section contsants functions
-*/
+func (s *Section) Merge(ext *Section) (bool, error) {
+	if ext.Type != C {
+		return false, fmt.Errorf(CanOnlyMergeContinuations)
+	}
+	initialSize := len(s.Fields)
+	s.Fields = append(s.Fields, ext.Fields...)
+	return initialSize != len(s.Fields), nil
+}
 
 func IsSectionMandatory(t SectionIdentifier) (bool, error) {
 	m, exists := mandatoryMap[t]
@@ -127,24 +132,3 @@ func GetSectionIdentifier(s string) (SectionIdentifier, error) {
 	}
 	return "", fmt.Errorf(UnknownSectionIdentifier)
 }
-
-/*
-func (h *FileHeader) GetFieldIndex(t FieldType) (int, error) {
-	return getFieldIndexOrErr(FileHeaderFields, t)
-}
-
-func (h *FileHeader) GetFieldValueByType(t FieldType) (string, error) {
-	i, err := h.GetFieldIndex(t)
-	if err != nil {
-		return "", err
-	}
-	return h.Data.Fields[i], nil
-}
-
-func (h *FileHeader) GetFieldValueByIndex(i int) (string, error) {
-	if i < 0 || i >= NumFileHeaderFields {
-		return "", fmt.Errorf(FieldNotInSection)
-	}
-	return h.Data.Fields[i], nil
-}
-*/

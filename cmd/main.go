@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/JonathanCBU/bai2-translator/internal/parser"
@@ -39,4 +40,22 @@ func main() {
 	for i := range sections {
 		fmt.Println(sections[i].Type)
 	}
+	_, err = f.Seek(0, io.SeekStart)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	bai2, err := parser.NewBai2FromReader(f)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = bai2.Clean()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(len(bai2.Raw))
+	fmt.Println(len(bai2.Data))
 }
