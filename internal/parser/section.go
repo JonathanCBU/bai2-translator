@@ -110,7 +110,7 @@ func (s *Section) Merge(ext *Section) (bool, error) {
 		return false, fmt.Errorf(CanOnlyMergeContinuations)
 	}
 	initialSize := len(s.Fields)
-	s.Fields = append(s.Fields, ext.Fields...)
+	s.Fields = append(s.Fields, ext.Fields[1:]...)
 	return initialSize != len(s.Fields), nil
 }
 

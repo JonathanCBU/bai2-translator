@@ -47,3 +47,20 @@ func (b *Bai2) Clean() error {
 	b.Data = data
 	return nil
 }
+
+func (b *Bai2) GetSectionsByType(t SectionIdentifier, clean bool) ([]*Section, error) {
+	var results []*Section
+	searchData := b.Raw
+	if clean {
+		searchData = b.Data
+	}
+
+	for _, s := range searchData {
+		if s.Type == t {
+			results = append(results, s)
+		}
+	}
+	return results, nil
+}
+
+func (b *Bai2) Print(fmt string)

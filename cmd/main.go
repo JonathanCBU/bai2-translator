@@ -32,14 +32,6 @@ func main() {
 	}
 	defer f.Close()
 
-	sections, err := parser.ScanFileToSections(f)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for i := range sections {
-		fmt.Println(sections[i].Type)
-	}
 	_, err = f.Seek(0, io.SeekStart)
 	if err != nil {
 		fmt.Println(err)
@@ -56,6 +48,13 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(len(bai2.Raw))
-	fmt.Println(len(bai2.Data))
+
+	txns, err := bai2.GetSectionsByType(parser.T, true)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for _, field := range txns[0].Fields {
+		fmt.Println(field)
+	}
 }
